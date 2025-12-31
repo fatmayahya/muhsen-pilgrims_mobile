@@ -49,46 +49,6 @@ The project follows **Clean Architecture** with a **feature-first structure** to
 
 ---
 
-## 📂 Project Structure
-
-lib/
-├─ core/
-│ ├─ constants/ # App-wide constants
-│ ├─ errors/ # Failures & exceptions
-│ ├─ injection/ # Dependency injection (get_it)
-│ ├─ network/ # Dio client, interceptors
-│ ├─ router/ # go_router configuration
-│ ├─ themes/ # App themes & styling
-│ ├─ utils/ # Shared helpers & utilities
-│
-├─ features/
-│ ├─ feature1/
-│ │ ├─ data/
-│ │ │ ├─ datasources/ # Remote / local data sources
-│ │ │ ├─ models/ # DTOs / API models
-│ │ │ └─ repositories/ # Repository implementations
-│ │ │
-│ │ ├─ domain/
-│ │ │ ├─ entities/ # Core business entities
-│ │ │ ├─ repositories/ # Repository contracts
-│ │ │ └─ usecases/ # Business use cases
-│ │ │
-│ │ └─ presentation/
-│ │ ├─ blocs/ # BLoC per flow/screen
-│ │ │ └─ feature1_flow/
-│ │ │ ├─ feature1_bloc.dart
-│ │ │ ├─ feature1_event.dart
-│ │ │ └─ feature1_state.dart
-│ │ ├─ pages/ # Screens
-│ │ └─ widgets/ # Feature-specific widgets
-│ │
-│ ├─ feature2/
-│ └─ feature3/
-│
-└─ main.dart
-
----
-
 ## BLoC Guidelines
 
 - One BLoC **per screen or business flow**
