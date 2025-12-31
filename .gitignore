@@ -1,0 +1,111 @@
+####################################
+# Miscellaneous
+####################################
+*.class
+*.log
+*.pyc
+*.swp
+*.lock
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+####################################
+# IntelliJ / Android Studio
+####################################
+*.iml
+*.ipr
+*.iws
+.idea/
+
+####################################
+# VS Code
+####################################
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+
+####################################
+# Flutter / Dart / Pub
+####################################
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+coverage/
+
+# Flutter generated
+**/doc/api/
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+
+####################################
+# Android
+####################################
+android/.gradle/
+android/local.properties
+android/key.properties
+android/**/key.properties
+android/upload-keystore.jks
+*.jks
+*.keystore
+
+# Android build outputs
+/android/app/debug/
+/android/app/profile/
+/android/app/release/
+
+####################################
+# iOS / Xcode
+####################################
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/App.framework
+ios/Flutter/engine/
+ios/Runner.xcworkspace/
+ios/Runner.xcodeproj/project.xcworkspace/
+
+# Xcode user data
+*.xcuserstate
+*.xcuserdata/
+DerivedData/
+
+####################################
+# CocoaPods
+####################################
+# RECOMMENDED: keep Podfile.lock committed
+# If you do NOT want to commit it, uncomment below
+# ios/Podfile.lock
+
+####################################
+# Fastlane
+####################################
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+*.p8
+
+####################################
+# Environment / Secrets
+####################################
+.env
+.env.*
+*.pem
+*.crt
+*.key
+
+####################################
+# Symbolication / Obfuscation
+####################################
+app.*.symbols
+app.*.map.json
