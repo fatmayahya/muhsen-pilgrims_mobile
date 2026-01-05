@@ -1,15 +1,10 @@
 import '../../domain/repositories/register_repository.dart';
 import '../datasources/register_remote_datasource.dart';
 
-
 class RegisterRepositoryImpl implements RegisterRepository {
   final RegisterRemoteDataSource remoteDataSource;
 
   RegisterRepositoryImpl(this.remoteDataSource);
-
-  // ═══════════════════════════════════════════════════════════
-  // 🔹 Request OTP
-  // ═══════════════════════════════════════════════════════════
 
   @override
   Future<String> requestOtp({
@@ -22,13 +17,9 @@ class RegisterRepositoryImpl implements RegisterRepository {
         mobileNo: mobileNo,
       );
     } catch (e) {
-      rethrow; 
+      rethrow;
     }
   }
-
-  // ═══════════════════════════════════════════════════════════
-  // 🔹 Activate OTP
-  // ═══════════════════════════════════════════════════════════
 
   @override
   Future<void> activateOtp({

@@ -1,12 +1,24 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:muhsen_pilgrims_mobile/muhsen_pilgrims_app.dart';
+import 'package:muhsen_pilgrims_mobile/core/network/api_client.dart';
+import 'package:muhsen_pilgrims_mobile/core/router/app_router.dart' as router;
 
 void main() {
-  testWidgets('App boots without crashing', (tester) async {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUpAll(() async {
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    router.apiClient = ApiClient(prefs: prefs);
+  });
+
+  testWidgets('App boots without crashing', (WidgetTester tester) async {
     await tester.pumpWidget(const MuhsenPilgrimsApp());
     await tester.pumpAndSettle();
-
-    // If the app throws during build, the test will fail automatically.
-    expect(find.byType(MuhsenPilgrimsApp), findsOneWidget);
+    
+    expect(find.byType(MaterialApp), findsOneWidget);
   });
 }

@@ -30,27 +30,10 @@ class SplashPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: AppColors.splashCard,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Image.asset(
-                      AppConstants.logoPath,
-                      width: 150,
-                      height: 150,
-                    ),
-                  ),
+                Image.asset(
+                  AppConstants.logoPath,
+                  width: 500,
+                  height: 300,
                 ),
                 const SizedBox(height: 40),
                 const CircularProgressIndicator(

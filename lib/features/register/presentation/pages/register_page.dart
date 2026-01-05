@@ -6,10 +6,6 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/route_constants.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
-import '../../../../core/themes/app_spacing.dart';
-import '../../../../core/widgets/layout/app_layout.dart';
-import '../../../../core/widgets/buttons/app_button.dart';
-import '../../../../core/utils/app_validators.dart';
 
 import '../bloc/register_bloc.dart';
 import '../bloc/register_event.dart';
@@ -26,11 +22,9 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
-  
   final _passportController = TextEditingController();
   final _phoneController = TextEditingController();
   
-
   String _completePhoneNumber = '';
 
   @override
@@ -45,7 +39,6 @@ class _RegisterPageState extends State<RegisterPage> {
       context.read<RegisterBloc>().add(
             RegisterSubmitted(
               passportNo: _passportController.text,
-            
               mobileNo: _completePhoneNumber,
               password: '',
             ),
@@ -72,7 +65,6 @@ class _RegisterPageState extends State<RegisterPage> {
             extra: {
               'otpRef': state.otpRef,
               'passport': state.passportNo,
-              
               'mobileNo': _completePhoneNumber,
             },
           );
@@ -104,7 +96,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     children: [
                       SizedBox(height: topPadding),
 
-                      // Header
                       Column(
                         children: [
                           Text(
@@ -123,27 +114,21 @@ class _RegisterPageState extends State<RegisterPage> {
 
                       SizedBox(height: headerSpacing),
 
-                      // Passport Field
                       PassportField(controller: _passportController),
 
                       SizedBox(height: fieldSpacing),
 
-                      // ✅ Phone Field 
                       PhoneField(
                         controller: _phoneController,
                         onPhoneChanged: (completeNumber) {
                           setState(() {
                             _completePhoneNumber = completeNumber;
                           });
-                          
-                          // Debug
-                          print('Complete Phone: $completeNumber');
                         },
                       ),
 
                       SizedBox(height: buttonSpacing),
 
-                      // Submit Button
                       BlocBuilder<RegisterBloc, RegisterState>(
                         builder: (context, state) {
                           return SizedBox(
@@ -183,7 +168,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
                       const SizedBox(height: 20),
 
-                      // Login Link
                       Center(
                         child: RichText(
                           textAlign: TextAlign.center,

@@ -1,11 +1,8 @@
-
 abstract class RegisterRepository {
- 
   Future<String> requestOtp({
     required String passportNo,
     required String mobileNo,
   });
-
 
   Future<void> activateOtp({
     required String otpRef,
