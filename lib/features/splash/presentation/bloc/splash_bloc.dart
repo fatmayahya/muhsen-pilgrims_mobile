@@ -1,5 +1,9 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'splash_event.dart';
+import 'splash_state.dart';
+
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
-  SplashBloc() : super(SplashInitial()) {
+  SplashBloc() : super(const SplashInitial()) {
     on<SplashStarted>(_onSplashStarted);
   }
 
@@ -7,16 +11,17 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     SplashStarted event,
     Emitter<SplashState> emit,
   ) async {
-    emit(SplashLoading());
+    emit(const SplashLoading());
 
     await Future.delayed(const Duration(seconds: 2));
 
-    final bool hasToken = false; // لاحقًا من SecureStorage
+    // TODO: Check if user is logged in
+    final isLoggedIn = false;
 
-    if (hasToken) {
-      emit(SplashGoToHome());
+    if (isLoggedIn) {
+      emit(const SplashGoToHome());
     } else {
-      emit(SplashGoToSignup());
+      emit(const SplashGoToSignup());
     }
   }
 }

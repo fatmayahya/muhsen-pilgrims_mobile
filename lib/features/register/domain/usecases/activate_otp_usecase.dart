@@ -1,0 +1,55 @@
+import '../repositories/register_repository.dart';
+
+/// 🔐 UseCase لتفعيل OTP وإنشاء الحساب
+/// 
+/// يحتوي على منطق العمل لتفعيل رمز التحقق
+class ActivateOtpUseCase {
+  final RegisterRepository repository;
+
+  ActivateOtpUseCase(this.repository);
+
+  /// تنفيذ العملية
+  Future<void> call({
+    required String otpRef,
+    required String passport,
+    required String otp,
+    required String password,
+  }) async {
+    // Validation
+    if (otpRef.trim().isEmpty) {
+      throw Exception('رمز OTP Reference مفقود');
+    }
+
+    if (passport.trim().isEmpty) {
+      throw Exception('رقم الجواز مطلوب');
+    }
+
+    if (otp.trim().isEmpty) {
+      throw Exception('رمز التحقق مطلوب');
+    }
+
+    if (otp.length != 4) {
+      throw Exception('رمز التحقق يجب أن يكون 4 أرقام');
+    }
+
+    if (!RegExp(r'^[0-9]+$').hasMatch(otp)) {
+      throw Exception('رمز التحقق يجب أن يحتوي على أرقام فقط');
+    }
+
+    // ✅ Password validation
+    if (password.trim().isEmpty) {
+      throw Exception('كلمة المرور مطلوبة');
+    }
+
+    if (password.length < 8) {
+      throw Exception('كلمة المرور يجب أن تكون 8 أحرف على الأقل');
+    }
+
+    await repository.activateOtp(
+      otpRef: otpRef.trim(),
+      passportNo: passport.trim(),
+      otpCode: otp.trim(),
+      password: password.trim(),
+    );
+  }
+}

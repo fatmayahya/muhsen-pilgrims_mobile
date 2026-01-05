@@ -1,4 +1,4 @@
-part of 'splash_bloc.dart';
+import 'package:equatable/equatable.dart';
 
 abstract class SplashState extends Equatable {
   const SplashState();
@@ -7,10 +7,18 @@ abstract class SplashState extends Equatable {
   List<Object> get props => [];
 }
 
-class SplashInitial extends SplashState {}
+class SplashInitial extends SplashState {
+  const SplashInitial();
+}
 
-class SplashLoading extends SplashState {}
+class SplashLoading extends SplashState {
+  const SplashLoading();
+}
 
-class SplashGoToSignup extends SplashState {}
+class SplashGoToHome extends SplashState {
+  const SplashGoToHome();
+}
 
-class SplashGoToHome extends SplashState {}
+class SplashGoToSignup extends SplashState {
+  const SplashGoToSignup();
+}
