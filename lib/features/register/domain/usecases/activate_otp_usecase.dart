@@ -1,14 +1,12 @@
 import '../repositories/register_repository.dart';
 
-/// 🔐 UseCase لتفعيل OTP وإنشاء الحساب
-/// 
-/// يحتوي على منطق العمل لتفعيل رمز التحقق
+
 class ActivateOtpUseCase {
   final RegisterRepository repository;
 
   ActivateOtpUseCase(this.repository);
 
-  /// تنفيذ العملية
+  
   Future<void> call({
     required String otpRef,
     required String passport,
@@ -36,7 +34,7 @@ class ActivateOtpUseCase {
       throw Exception('رمز التحقق يجب أن يحتوي على أرقام فقط');
     }
 
-    // ✅ Password validation
+  
     if (password.trim().isEmpty) {
       throw Exception('كلمة المرور مطلوبة');
     }
