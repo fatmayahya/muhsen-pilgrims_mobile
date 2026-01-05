@@ -65,10 +65,10 @@ class AppColors {
 
   static const Color textPrimary = Color(0xFF111827);
   
-
+  /// لون النص الثانوي - رمادي
   static const Color textSecondary = Color(0xFF6B7280);
   
- 
+  /// لون النص الباهت (placeholder) - رمادي فاتح
   static const Color textHint = Color(0xFFD1D5DB);
 
   // ═══════════════════════════════════════════════════════════

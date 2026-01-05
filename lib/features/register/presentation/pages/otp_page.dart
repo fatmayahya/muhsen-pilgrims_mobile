@@ -1,12 +1,11 @@
 import 'dart:async';
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/route_constants.dart';
-import '../../../../core/constants/app_constants.dart';  
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
 import '../bloc/otp_bloc.dart';
@@ -85,7 +84,6 @@ class _OtpPageState extends State<OtpPage> {
       return;
     }
 
-    
     context.push(
       RouteConstants.password,
       extra: {
@@ -149,7 +147,6 @@ class _OtpPageState extends State<OtpPage> {
                   children: [
                     const SizedBox(height: 24),
 
-                    // Header
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -175,7 +172,6 @@ class _OtpPageState extends State<OtpPage> {
 
                     const SizedBox(height: 32),
 
-                    // OTP Input
                     OtpInput(
                       length: AppConstants.otpLength,
                       onCompleted: _handleOtpCompleted,
@@ -188,7 +184,6 @@ class _OtpPageState extends State<OtpPage> {
 
                     const SizedBox(height: 32),
 
-                    // Submit Button
                     SizedBox(
                       height: 56,
                       width: double.infinity,
@@ -211,7 +206,6 @@ class _OtpPageState extends State<OtpPage> {
 
                     const SizedBox(height: 20),
 
-                    // Resend Button
                     Center(
                       child: BlocBuilder<OtpBloc, OtpState>(
                         builder: (context, state) {
