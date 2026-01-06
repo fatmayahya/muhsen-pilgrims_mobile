@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import '../../../../core/network/api_client.dart';
 import '../../../../core/constants/api_constants.dart';
-import '../../../../core/errors/error_handler.dart';
 
 class RegisterRemoteDataSource {
   final ApiClient apiClient;
@@ -41,7 +40,15 @@ class RegisterRemoteDataSource {
         if (jsonData['error'] != null) {
           final error = jsonData['error'];
           if (error is Map) {
-            errorMessage = error['message'] ?? errorMessage;
+            final code = error['code']?.toString() ?? '';
+            final message = error['message']?.toString() ?? '';
+            
+            // Handle ALREADY_REGISTERED
+            if (code == 'ALREADY_REGISTERED' || message.contains('already registered')) {
+              throw Exception('رقم الجواز مسجل مسبقاً');
+            }
+            
+            errorMessage = message.isNotEmpty ? message : errorMessage;
           } else if (error is String) {
             errorMessage = error;
           }
@@ -49,7 +56,7 @@ class RegisterRemoteDataSource {
           errorMessage = jsonData['message'];
         }
 
-        throw Exception(ErrorHandler.getErrorMessage(errorMessage));
+        throw Exception(errorMessage);
       }
 
       final data = jsonData['data'];
@@ -65,7 +72,7 @@ class RegisterRemoteDataSource {
 
       return otpRef.toString();
     } catch (e) {
-      throw Exception(ErrorHandler.getErrorMessage(e));
+      rethrow;
     }
   }
 
@@ -111,10 +118,10 @@ class RegisterRemoteDataSource {
           errorMessage = jsonData['message'];
         }
 
-        throw Exception(ErrorHandler.getErrorMessage(errorMessage));
+        throw Exception(errorMessage);
       }
     } catch (e) {
-      throw Exception(ErrorHandler.getErrorMessage(e));
+      rethrow;
     }
   }
 }

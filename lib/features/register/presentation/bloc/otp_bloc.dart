@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/usecases/activate_otp_usecase.dart';
 import '../../domain/usecases/request_otp_usecase.dart';
 import 'otp_event.dart';
 import 'otp_state.dart';
-
 
 class OtpBloc extends Bloc<OtpEvent, OtpState> {
   final ActivateOtpUseCase activateOtpUseCase;
@@ -24,10 +24,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
     on<OtpResendRequested>(_onOtpResendRequested);
   }
 
-  // ═══════════════════════════════════════════════════════════
-  // 🔹 Handle OTP Submitted
-  // ═══════════════════════════════════════════════════════════
-
   Future<void> _onOtpSubmitted(
     OtpSubmitted event,
     Emitter<OtpState> emit,
@@ -35,13 +31,18 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
     emit(OtpLoading());
 
     try {
-     
       await activateOtpUseCase(
         otpRef: otpRef,
         passport: passport,
         otp: event.otpCode,
-        password: event.password,  
+        password: event.password,
       );
+
+      // Save user as logged in
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('auth_token', 'logged_in');
+      await prefs.setString('passport', passport);
+      await prefs.setString('mobile', mobileNo);
 
       emit(OtpSuccess());
     } on Exception catch (e) {
@@ -50,10 +51,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
       emit(const OtpFailure('رمز التحقق غير صحيح'));
     }
   }
-
-  // ═══════════════════════════════════════════════════════════
-  // 🔹 Handle OTP Resend
-  // ═══════════════════════════════════════════════════════════
 
   Future<void> _onOtpResendRequested(
     OtpResendRequested event,
@@ -68,7 +65,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
       );
 
       emit(const OtpResendSuccess('تم إرسال رمز التحقق بنجاح'));
-      
+
       await Future.delayed(const Duration(seconds: 2));
       emit(OtpInitial());
     } on Exception catch (e) {

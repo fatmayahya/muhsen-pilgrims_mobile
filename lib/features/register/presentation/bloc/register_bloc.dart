@@ -4,7 +4,6 @@ import '../../domain/usecases/request_otp_usecase.dart';
 import 'register_event.dart';
 import 'register_state.dart';
 
-
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   final RequestOtpUseCase requestOtpUseCase;
 
@@ -24,15 +23,26 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         mobileNo: event.mobileNo,
       );
 
-      // ✅  password
       emit(RegisterOtpRequested(
         otpRef: otpRef,
         passportNo: event.passportNo,
       ));
-    } on Exception catch (e) {
-      emit(RegisterFailure(e.toString().replaceAll('Exception: ', '')));
     } catch (e) {
-      emit(const RegisterFailure('حدث خطأ غير متوقع'));
+      // Extract error message properly
+      String errorMessage = e.toString();
+      
+      // Remove 'Exception: ' prefix if exists
+      if (errorMessage.startsWith('Exception: ')) {
+        errorMessage = errorMessage.substring(11);
+      }
+      
+      // If error contains ALREADY_REGISTERED
+      if (errorMessage.contains('ALREADY_REGISTERED') || 
+          errorMessage.toLowerCase().contains('already registered')) {
+        errorMessage = 'رقم الجواز مسجل مسبقاً';
+      }
+      
+      emit(RegisterFailure(errorMessage));
     }
   }
 }
