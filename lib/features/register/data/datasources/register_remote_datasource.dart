@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../../../../core/network/api_client.dart';
 import '../../../../core/constants/api_constants.dart';
+import '../../../../core/errors/error_handler.dart';
 
 class RegisterRemoteDataSource {
   final ApiClient apiClient;
@@ -48,7 +49,7 @@ class RegisterRemoteDataSource {
           errorMessage = jsonData['message'];
         }
 
-        throw Exception(errorMessage);
+        throw Exception(ErrorHandler.getErrorMessage(errorMessage));
       }
 
       final data = jsonData['data'];
@@ -64,7 +65,7 @@ class RegisterRemoteDataSource {
 
       return otpRef.toString();
     } catch (e) {
-      rethrow;
+      throw Exception(ErrorHandler.getErrorMessage(e));
     }
   }
 
@@ -110,10 +111,10 @@ class RegisterRemoteDataSource {
           errorMessage = jsonData['message'];
         }
 
-        throw Exception(errorMessage);
+        throw Exception(ErrorHandler.getErrorMessage(errorMessage));
       }
     } catch (e) {
-      rethrow;
+      throw Exception(ErrorHandler.getErrorMessage(e));
     }
   }
 }
