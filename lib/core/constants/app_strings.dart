@@ -85,9 +85,4 @@ class AppStrings {
   static const String loadingPleaseWait = 'الرجاء الانتظار...';
   static const String loadingCreatingAccount = 'جارِ إنشاء الحساب...';
   static const String loadingSendingOtp = 'جارِ إرسال رمز التحقق...';
-
-  // Helper method to replace placeholders
-  static String otpResendTimerFormatted(int seconds) {
-    return otpResendTimer.replaceAll('{seconds}', seconds.toString());
-  }
 }

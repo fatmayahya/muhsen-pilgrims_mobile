@@ -9,6 +9,7 @@ class ErrorHandler {
     // Duplicate/Already Exists Errors
     if (errorString.contains('duplicate') ||
         errorString.contains('already exists') ||
+        errorString.contains('already_registered') ||
         errorString.contains('موجود مسبقاً') ||
         errorString.contains('مسجل')) {
       if (errorString.contains('passport') || errorString.contains('جواز')) {
@@ -19,6 +20,7 @@ class ErrorHandler {
           errorString.contains('جوال')) {
         return AppStrings.errorDuplicatePhone;
       }
+      return AppStrings.errorDuplicatePassport;
     }
 
     // Invalid OTP
@@ -77,37 +79,5 @@ class ErrorHandler {
     return cleanedError.isNotEmpty && cleanedError.length < 100
         ? cleanedError
         : AppStrings.errorUnknown;
-  }
-
-  static String getValidationError(String field, String? value) {
-    if (value == null || value.trim().isEmpty) {
-      switch (field) {
-        case 'passport':
-          return AppStrings.passportRequired;
-        case 'phone':
-          return AppStrings.phoneRequired;
-        case 'otp':
-          return AppStrings.otpRequired;
-        case 'password':
-          return AppStrings.passwordRequired;
-        default:
-          return AppStrings.requiredField;
-      }
-    }
-
-    switch (field) {
-      case 'passport':
-        if (value.length < 6) {
-          return AppStrings.passportMinLength;
-        }
-        break;
-      case 'password':
-        if (value.length < 8) {
-          return AppStrings.passwordMinLength;
-        }
-        break;
-    }
-
-    return '';
   }
 }
