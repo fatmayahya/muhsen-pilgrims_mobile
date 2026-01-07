@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../constants/api_constants.dart';
 import '../errors/exceptions.dart';
 
@@ -11,65 +12,71 @@ class ApiClient {
       : _prefs = prefs,
         _dio = Dio() {
     _dio.options.baseUrl = ApiConstants.baseUrl;
-    _dio.options.connectTimeout = const Duration(seconds: 30);
-    _dio.options.receiveTimeout = const Duration(seconds: 30);
-    _dio.options.headers['Content-Type'] = 'application/json';
-    _dio.options.headers['Accept'] = 'application/json';
+    _dio.options.connectTimeout = ApiConstants.connectTimeout;
+    _dio.options.receiveTimeout = ApiConstants.receiveTimeout;
 
-    // Add interceptors
+    _dio.options.headers['Content-Type'] =
+        ApiConstants.contentTypeJson;
+    _dio.options.headers['Accept'] =
+        ApiConstants.contentTypeJson;
+
+  
+    _dio.options.validateStatus = (status) {
+      return status != null && status < 500;
+    };
+
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          // Add auth token
           final token = _getToken();
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
           }
-          print('REQUEST: ${options.method} ${options.path}');
-          print('HEADERS: ${options.headers}');
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          print('RESPONSE: ${response.statusCode} - ${response.requestOptions.path}');
           return handler.next(response);
         },
         onError: (error, handler) {
-          print('ERROR: ${error.message}');
-          print('ERROR STATUS: ${error.response?.statusCode}');
           return handler.next(error);
         },
       ),
     );
 
-    // Optional: Add logging interceptor for debugging
     if (ApiConstants.enableLogging) {
-      _dio.interceptors.add(LogInterceptor(
-        request: true,
-        requestHeader: true,
-        requestBody: true,
-        responseHeader: true,
-        responseBody: true,
-        error: true,
-      ));
+      _dio.interceptors.add(
+        LogInterceptor(
+          request: true,
+          requestHeader: true,
+          requestBody: true,
+          responseHeader: true,
+          responseBody: true,
+          error: true,
+        ),
+      );
     }
   }
 
-  // Get token from shared preferences
+  // ═══════════════════════════════════════════════════════════
+  // 🔹 Token helpers
+  // ═══════════════════════════════════════════════════════════
+
   String? _getToken() {
     return _prefs.getString(ApiConstants.tokenKey);
   }
 
-  // Save token to shared preferences
   Future<void> saveToken(String token) async {
     await _prefs.setString(ApiConstants.tokenKey, token);
   }
 
-  // Remove token from shared preferences
   Future<void> removeToken() async {
     await _prefs.remove(ApiConstants.tokenKey);
   }
 
-  // GET request
+  // ═══════════════════════════════════════════════════════════
+  // 🔹 HTTP METHODS
+  // ═══════════════════════════════════════════════════════════
+
   Future<Response> get(
     String path, {
     Map<String, dynamic>? queryParameters,
@@ -86,7 +93,6 @@ class ApiClient {
     }
   }
 
-  // POST request
   Future<Response> post(
     String path, {
     dynamic data,
@@ -105,7 +111,6 @@ class ApiClient {
     }
   }
 
-  // PUT request
   Future<Response> put(
     String path, {
     dynamic data,
@@ -124,7 +129,6 @@ class ApiClient {
     }
   }
 
-  // PATCH request
   Future<Response> patch(
     String path, {
     dynamic data,
@@ -143,7 +147,6 @@ class ApiClient {
     }
   }
 
-  // DELETE request
   Future<Response> delete(
     String path, {
     dynamic data,
@@ -162,7 +165,10 @@ class ApiClient {
     }
   }
 
-  // Upload file
+  // ═══════════════════════════════════════════════════════════
+  // 🔹 FILE UPLOAD / DOWNLOAD
+  // ═══════════════════════════════════════════════════════════
+
   Future<Response> uploadFile(
     String path,
     String filePath, {
@@ -186,7 +192,6 @@ class ApiClient {
     }
   }
 
-  // Download file
   Future<Response> downloadFile(
     String urlPath,
     String savePath, {
@@ -203,44 +208,16 @@ class ApiClient {
     }
   }
 
-  // Handle errors
+  // ═══════════════════════════════════════════════════════════
+  // 🔹 ERROR HANDLING
+  // ═══════════════════════════════════════════════════════════
+
   Exception _handleError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return TimeoutException(
-          message: 'Connection timeout',
-        );
-
-      case DioExceptionType.badResponse:
-        final statusCode = error.response?.statusCode;
-        final message = error.response?.data['message'] ?? 
-                       error.response?.data['error'] ?? 
-                       'Server error';
-
-        switch (statusCode) {
-          case 400:
-            return BadRequestException(message: message);
-          case 401:
-            return UnauthorizedException(message: message);
-          case 403:
-            return ForbiddenException(message: message);
-          case 404:
-            return NotFoundException(message: message);
-          case 500:
-          case 502:
-          case 503:
-            return ServerException(
-              message: message,
-              statusCode: statusCode,
-            );
-          default:
-            return ServerException(
-              message: message,
-              statusCode: statusCode,
-            );
-        }
+        return TimeoutException(message: 'Connection timeout');
 
       case DioExceptionType.cancel:
         return RequestCancelledException(
@@ -257,8 +234,40 @@ class ApiClient {
           message: 'Certificate verification failed',
         );
 
+      case DioExceptionType.badResponse:
+        final statusCode = error.response?.statusCode;
+        final message =
+            error.response?.data?['message'] ??
+            error.response?.data?['error'] ??
+            'Server error';
+
+        switch (statusCode) {
+          case 400:
+            return BadRequestException(message: message);
+          case 401:
+            return UnauthorizedException(message: message);
+          case 403:
+            return ForbiddenException(message: message);
+          case 404:
+            return NotFoundException(message: message);
+          case 409:
+            return ConflictException(message: message);
+          case 500:
+          case 502:
+          case 503:
+            return ServerException(
+              message: message,
+              statusCode: statusCode,
+            );
+          default:
+            return ServerException(
+              message: message,
+              statusCode: statusCode,
+            );
+        }
+
       case DioExceptionType.unknown:
-      return UnknownException(
+        return UnknownException(
           message: error.message ?? 'Unknown error occurred',
         );
     }

@@ -89,12 +89,8 @@ class PhoneField extends StatelessWidget {
           
           onChanged: (phone) {
             if (onPhoneChanged != null && phone.completeNumber.isNotEmpty) {
-              try {
-                final cleanedNumber = _cleanPhoneNumber(phone.completeNumber);
-                onPhoneChanged!(cleanedNumber);
-              } catch (e) {
-                debugPrint('Error cleaning phone: $e');
-              }
+              final cleanedNumber = _cleanPhoneNumber(phone.completeNumber);
+              onPhoneChanged!(cleanedNumber);
             }
           },
 
@@ -116,19 +112,14 @@ class PhoneField extends StatelessWidget {
   String _cleanPhoneNumber(String phoneNumber) {
     if (phoneNumber.isEmpty) return phoneNumber;
     
-    try {
-      // Remove + and spaces
-      String cleaned = phoneNumber.replaceAll('+', '').replaceAll(' ', '');
-      
-      // Handle 9660 prefix (duplicate 0)
-      if (cleaned.startsWith('9660') && cleaned.length > 4) {
-        cleaned = '966${cleaned.substring(4)}';
-      }
-      
-      return cleaned;
-    } catch (e) {
-      debugPrint('Error in _cleanPhoneNumber: $e');
-      return phoneNumber.replaceAll('+', '');
+    // Remove + and spaces
+    String cleaned = phoneNumber.replaceAll('+', '').replaceAll(' ', '');
+    
+    // Safe check: make sure string is long enough before substring
+    if (cleaned.length > 4 && cleaned.startsWith('9660')) {
+      cleaned = '966${cleaned.substring(4)}';
     }
+    
+    return cleaned;
   }
 }

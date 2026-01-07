@@ -86,3 +86,11 @@ class FormatException extends AppException {
   FormatException({String? message})
       : super(message: message ?? 'Invalid data format');
 }
+class ConflictException implements Exception {
+  final String message;
+
+  ConflictException({required this.message});
+
+  @override
+  String toString() => message;
+}
